@@ -1,0 +1,8 @@
+.OrderDisplay {
+  display: flex;
+  height: 85vh;
+}
+
+.OrderDisplay .OrderDiv {
+  display: inline-block;
+}

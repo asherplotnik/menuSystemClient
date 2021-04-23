@@ -1,0 +1,13 @@
+.MenuOrder {
+  display: inline-block;
+  border: 1px solid lightgrey;
+  width: calc(100% / 6);
+  min-width: calc(100% / 6);
+  overflow-y: auto;
+  font-weight: bold;
+}
+
+.MenuOrder .EntryDiv {
+  border-bottom: 1px solid lightgray;
+  padding-top: 10px;
+}

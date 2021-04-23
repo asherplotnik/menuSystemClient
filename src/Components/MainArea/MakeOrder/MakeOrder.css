@@ -1,0 +1,4 @@
+.MakeOrder .CardsWrapper {
+  display: flex;
+  flex-wrap: wrap;
+}
