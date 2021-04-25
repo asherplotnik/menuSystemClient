@@ -2,10 +2,11 @@
 // Handling Products AppState
 
 import AuthModel from "../Models/AuthModel";
+import CustomerModel from "../Models/CustomerModel";
 
 // Products AppState - המידע ברמת האפליקציה הקשור למוצרים - אלו בעצם כל המוצרים:
 export class AuthState {
-    public auth: AuthModel = {token:""} ; // We're going to create initial object
+    public auth: CustomerModel = new CustomerModel(); // We're going to create initial object
     public constructor() {
         const stored = JSON.parse(localStorage.getItem("auth"));
         if(stored) {
@@ -51,7 +52,7 @@ export function AuthReducer(currentState: AuthState = new AuthState(), action: A
 
     switch(action.type) {
         case AuthActionType.SetAuth:
-            newState.auth.token = action.payload.token; 
+            newState.auth = action.payload; 
             localStorage.setItem("auth", JSON.stringify(newState.auth));
             break;
         case AuthActionType.RemoveAuth:

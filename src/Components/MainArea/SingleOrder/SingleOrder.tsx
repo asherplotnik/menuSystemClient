@@ -79,10 +79,19 @@ function SingleOrder(props: MoProps): JSX.Element {
             </Alert>
           </ListGroup.Item>
           <ListGroup.Item key={2}>
-            Name: {props.order.customer.name}
+            <div
+              style={
+                props.order.orderType === "TABLE"
+                  ? { backgroundColor: "cadetblue" }
+                  : { backgroundColor: "greenyellow" }
+              }
+            >
+              {props.order.orderType}
+            </div>
+            <span>Name: {props.order.customer.name}</span> <br />
+            Note: {props.order.note}
           </ListGroup.Item>
-          <ListGroup.Item key={4}>Note: {props.order.note}</ListGroup.Item>
-          <ListGroup.Item key={6}>
+          <ListGroup.Item key={3}>
             {props.order.entries.map((entry, index) => {
               return (
                 <div className="EntryDiv">

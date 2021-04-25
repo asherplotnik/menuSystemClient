@@ -1,4 +1,30 @@
+.MakeOrder {
+  font-weight: bold;
+}
 .MakeOrder .CardsWrapper {
   display: flex;
   flex-wrap: wrap;
+}
+
+.MakeOrder .FormWrapper {
+  max-width: 20rem;
+}
+
+.MakeOrder .TabWrapper {
+  display: block;
+  width: 100%;
+  text-align: center;
+}
+
+.MakeOrder .OrderBox {
+  width: 50%;
+}
+
+.MakeOrder .Hidden {
+  display: none;
+}
+
+.MakeOrder .ButtonWrapper {
+  text-align: center;
+  padding: 20px;
 }

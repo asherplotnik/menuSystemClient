@@ -1,3 +1,7 @@
 .DishCard {
-	
+  border: 2px solid transparent;
+}
+
+.Clicked {
+  border: 2px solid blue;
 }

@@ -6,9 +6,9 @@ class CustomerModel {
 	public address:string="";
 	public phone:string="";
 	public level:LevelEnum=LevelEnum.NONE;
-	public salt:string="";
 	public email:string="";
-	public password:string="";
+	public token:string="";
+
 }
 
 export default CustomerModel;
