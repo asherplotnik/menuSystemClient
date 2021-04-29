@@ -1,7 +1,13 @@
 .DishCard {
   border: 2px solid transparent;
+  cursor: inherit;
 }
 
 .Clicked {
   border: 2px solid blue;
+  cursor: pointer;
+}
+
+.Hovered {
+  cursor: pointer;
 }

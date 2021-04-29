@@ -30,6 +30,9 @@ function Login(): JSX.Element {
           case LevelEnum.CUSTOMER:
             history.push("/makeOrder");
             break;
+          case LevelEnum.ADMIN:
+            history.push("/adminMenu");
+            break;
         }
       });
   };

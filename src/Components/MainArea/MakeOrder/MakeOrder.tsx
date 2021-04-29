@@ -9,6 +9,8 @@ import DishCard from "../DishCard/DishCard";
 import EntryPayload from "../../../Models/EntryPayload";
 import OrderPayload from "../../../Models/OrderPayload";
 import { OrderType } from "../../../Models/Enums";
+import store from "../../../Redux/Store";
+import { useHistory } from "react-router";
 
 function MakeOrder(): JSX.Element {
   let [dishes, setDishes] = useState<DishModel[]>([]);
@@ -16,6 +18,7 @@ function MakeOrder(): JSX.Element {
   let [key, setKey] = useState("DRINK");
   let [up, setUp] = useState(0);
   let [token, setToken] = useState("");
+  const history = useHistory();
   const handleSelectedDish = (dish: DishModel) => {
     let temp = [...selectedDishes];
     let currEntry = new EntryPayload();
@@ -54,6 +57,9 @@ function MakeOrder(): JSX.Element {
   };
 
   useEffect(() => {
+    if (!store.getState().AuthState.auth.token) {
+      history.push("/login");
+    }
     axios
       .get(globals.urls.localUrl + "order/getMenu")
       .then((response) => {
@@ -62,19 +68,8 @@ function MakeOrder(): JSX.Element {
       .catch((err) => {
         console.log(err);
       });
-    axios
-      .post(globals.urls.localUrl + "auth/signIn", {
-        email: "1@1",
-        password: "111",
-      })
-      .then((response) => {
-        setToken(response.data.token);
-        console.log(response.data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, []);
+    setToken(store.getState().AuthState.auth.token);
+  }, [history]);
 
   const { register, handleSubmit } = useForm();
   interface IFormInput {

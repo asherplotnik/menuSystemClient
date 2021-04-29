@@ -12,10 +12,14 @@ function DishCard(props: DcProps): JSX.Element {
     props.selected(props.dish);
   };
   const handleDown = () => {
-    setClassMod("DishCard Clicked");
+    setClassMod("DishCard Clicked hovered");
   };
   const handleUp = () => {
     setClassMod("DishCard");
+  };
+
+  const handleEnter = () => {
+    setClassMod("DishCard Hovered");
   };
   // console.log(props.dish.name);
   return (
@@ -23,6 +27,7 @@ function DishCard(props: DcProps): JSX.Element {
       onClick={handleSelectDish}
       className={classMod}
       onMouseDown={handleDown}
+      onMouseEnter={handleEnter}
       onMouseUp={handleUp}
       onMouseLeave={handleUp}
     >
@@ -46,7 +51,11 @@ function DishCard(props: DcProps): JSX.Element {
             <Card.Title>
               {props.dish.id}) {props.dish.name}
             </Card.Title>
-            <Card.Text>{props.dish.description}</Card.Text>
+            <Card.Text>
+              {props.dish.description}
+              <br />
+              {props.dish.price} ฿
+            </Card.Text>
           </Card.Body>
         </Card>
       </CardGroup>

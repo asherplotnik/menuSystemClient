@@ -1,13 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router";
 import MenuOrderModel from "../../../Models/MenuOrderModel";
+import store from "../../../Redux/Store";
 import globals from "../../../Services/Globals";
 import SingleOrder from "../SingleOrder/SingleOrder";
 import "./OrderDisplay.css";
 
 function OrderDisplay(): JSX.Element {
+  let [token, setToken] = useState(store.getState().AuthState.auth.token);
   let [orders, setOrders] = useState<MenuOrderModel[]>([]);
-  let [token, setToken] = useState("");
+  const history = useHistory();
   const getOrders = () => {
     axios
       .get<MenuOrderModel[]>(globals.urls.localUrl + "display/getOpenOrders", {
@@ -19,25 +22,19 @@ function OrderDisplay(): JSX.Element {
       .catch(function (error) {});
   };
   useEffect(() => {
+    setToken(store.getState().AuthState.auth.token);
+    if (!store.getState().AuthState.auth.token) {
+      history.push("/login");
+    }
     axios
-      .post(globals.urls.localUrl + "auth/signIn/", {
-        password: "111111",
-        email: "11@11",
+      .get<MenuOrderModel[]>(globals.urls.localUrl + "display/getOpenOrders", {
+        headers: { token: token },
       })
-      .then((response) => {
-        setToken(response.data);
-        axios
-          .get<MenuOrderModel[]>(
-            globals.urls.localUrl + "display/getOpenOrders",
-            { headers: { token: response.data } }
-          )
-          .then(function (res) {
-            setOrders(res.data);
-          })
-          .catch(function (error) {});
+      .then(function (res) {
+        setOrders(res.data);
       })
-      .catch(() => {});
-  }, []);
+      .catch(function (error) {});
+  }, [history, token]);
   return (
     <div className="OrderDisplay">
       {orders &&

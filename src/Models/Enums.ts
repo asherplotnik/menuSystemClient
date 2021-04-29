@@ -18,7 +18,7 @@ export enum LevelEnum {
     SERVICE="SERVICE"
 }
 
-export enum Category {
+export enum CategoryEnum {
     NONE="NONE",
     DRINK="DRINK", 
     MAIN_COURSE="MAIN_COURSE",
