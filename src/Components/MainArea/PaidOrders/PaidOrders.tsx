@@ -70,6 +70,15 @@ function PaidOrders(): JSX.Element {
     [token]
   );
 
+  const calculateTotal = (order: MenuOrderModel): number => {
+    let total = 0;
+    order.entries.map((entry) => {
+      total += entry.dish.price * entry.quantity;
+      return null;
+    });
+    return total;
+  };
+
   useEffect(() => {
     setToken(store.getState().AuthState.auth.token);
     if (!store.getState().AuthState.auth.token) {
@@ -126,6 +135,7 @@ function PaidOrders(): JSX.Element {
                         </div>
                       );
                     }
+                    const currDate = new Date(order.time);
                     return (
                       <ListGroup.Item key={indexOrder}>
                         <div
@@ -133,8 +143,10 @@ function PaidOrders(): JSX.Element {
                             handleClickOrders(event, indexOrder)
                           }
                         >
-                          {order.id} | {order.customer.name} | {order.time} |
-                          {order.orderType} | {order.note}
+                          ID: {order.id} | CUSTOMER: {order.customer.name} |{" "}
+                          DATE: {currDate.getDate()}/{currDate.getMonth()}/
+                          {currDate.getFullYear()} | TYPE: {order.orderType} |{" "}
+                          NOTE: {order.note} | TOTAL: {calculateTotal(order)}
                         </div>
                         {orderGroup}
                       </ListGroup.Item>
