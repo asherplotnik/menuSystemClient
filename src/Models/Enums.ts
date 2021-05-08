@@ -3,9 +3,9 @@ export enum StatusEnum {
     ORDERED="ORDERED", 
     READY="READY", 
     SERVED="SERVED", 
+    PAID="PAID", 
     ONROUTE="ONROUTE", 
     DELIVERED="DELIVERED", 
-    PAID="PAID", 
     CANCELED="CANCELED", 
     RETURNED="RETURNED"
 }

@@ -1,0 +1,14 @@
+.ServedOrders {
+  display: flex;
+  height: 85vh;
+  overflow-y: auto;
+}
+
+.ServedOrders .ServedOrderDiv {
+  display: inline-block;
+  border: 1px solid lightgrey;
+  width: calc(100% / 6);
+  min-width: calc(100% / 6);
+  overflow-y: auto;
+  font-weight: bold;
+}

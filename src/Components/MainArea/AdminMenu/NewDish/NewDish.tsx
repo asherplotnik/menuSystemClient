@@ -31,6 +31,7 @@ function NewDish(): JSX.Element {
       })
       .then((response) => {
         console.log(response.data);
+        alert("Dish added.");
       })
       .catch((err) => {
         alert(err);
@@ -43,15 +44,40 @@ function NewDish(): JSX.Element {
         <Form onSubmit={handleSubmit(onSubmit)}>
           <Form.Group>
             <Form.Label>Name:</Form.Label>
-            <Form.Control {...register("name")} />
+            <Form.Control
+              {...register("name", {
+                required: { value: true, message: "please enter name" },
+                minLength: {
+                  value: 5,
+                  message: "please enter longer description",
+                },
+              })}
+            />
+            <span>{errors.name?.message}</span>
           </Form.Group>
           <Form.Group>
             <Form.Label>description:</Form.Label>
-            <Form.Control as="textarea" {...register("description")} />
+            <Form.Control
+              as="textarea"
+              {...register("description", {
+                required: { value: true, message: "please enter description" },
+                minLength: {
+                  value: 25,
+                  message: "please enter longer description",
+                },
+              })}
+            />
+            <span>{errors.description?.message}</span>
           </Form.Group>
           <Form.Group>
             <Form.Label>Price:</Form.Label>
-            <Form.Control {...register("price")} />
+            <Form.Control
+              {...register("price", {
+                min: { value: 1, message: "price too low" },
+                required: { value: true, message: "please enter price" },
+              })}
+            />
+            <span>{errors.price?.message}</span>
           </Form.Group>
           <Form.Group>
             <Form.Label>Category:</Form.Label>
@@ -76,15 +102,21 @@ function NewDish(): JSX.Element {
             <Form.File
               id="ControlFile1"
               label="Choose primary image"
-              {...register("image1")}
+              {...register("image1", {
+                required: { value: true, message: "file was not selected" },
+              })}
             />
+            <span>{errors.image1?.message}</span>
           </Form.Group>
           <Form.Group>
             <Form.File
               id="ControlFile2"
               label="Choose secondary image"
-              {...register("image2")}
+              {...register("image2", {
+                required: { value: true, message: "file was not selected" },
+              })}
             />
+            <span>{errors.image2?.message}</span>
           </Form.Group>
           <Button type="submit">Submit</Button>
         </Form>

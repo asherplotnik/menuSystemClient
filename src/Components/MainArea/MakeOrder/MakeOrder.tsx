@@ -74,7 +74,7 @@ function MakeOrder(): JSX.Element {
   const { register, handleSubmit } = useForm();
   interface IFormInput {
     note: string;
-    orderType: boolean;
+    orderType: string;
   }
 
   const confirmOrder = (data: IFormInput) => {

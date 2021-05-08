@@ -19,7 +19,10 @@ function SingleOrder(props: MoProps): JSX.Element {
     if (props.order.entries.length === updatePage) {
       axios
         .post(
-          globals.urls.localUrl + "display/updateOrderReady/" + props.order.id,
+          globals.urls.localUrl +
+            "display/updateOrderStatus/" +
+            props.order.id +
+            "/READY",
           {},
           { headers: { token: props.token } }
         )
@@ -94,9 +97,8 @@ function SingleOrder(props: MoProps): JSX.Element {
           <ListGroup.Item key={3}>
             {props.order.entries.map((entry, index) => {
               return (
-                <div className="EntryDiv">
+                <div key={index} className="EntryDiv">
                   <Alert
-                    key={index}
                     onClick={() => handleUpdateEntry(entry)}
                     variant={entry.ready !== null ? "primary" : "light"}
                   >

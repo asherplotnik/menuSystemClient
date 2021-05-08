@@ -9,10 +9,12 @@ function AdminMenu(): JSX.Element {
       (e.target as HTMLElement).className + " HoveredItem";
   };
   const handleExit = (e: SyntheticEvent) => {
-    (e.target as HTMLElement).className = (e.target as HTMLElement).className.slice(
-      0,
-      (e.target as HTMLElement).className.length - 11
-    );
+    if ((e.target as HTMLElement).className.includes("HoveredItem")) {
+      (e.target as HTMLElement).className = (e.target as HTMLElement).className.slice(
+        0,
+        (e.target as HTMLElement).className.length - 11
+      );
+    }
   };
   const navStyle = {
     textDecoration: "none",
@@ -26,11 +28,10 @@ function AdminMenu(): JSX.Element {
         <ListGroup>
           <NavLink style={navStyle} to="/newDish">
             <ListGroup.Item
-              className="NavLink"
               onMouseEnter={handleHover}
               onMouseLeave={handleExit}
             >
-              Make new dish
+              Add new dish
             </ListGroup.Item>
           </NavLink>
           <NavLink style={navStyle} to="/updateDish">
@@ -51,28 +52,19 @@ function AdminMenu(): JSX.Element {
               Delete a dish
             </ListGroup.Item>
           </NavLink>
-          <NavLink style={navStyle} to="/markDish">
-            <ListGroup.Item
-              onMouseEnter={handleHover}
-              onMouseLeave={handleExit}
-            >
-              Mark Dish unavailable
-            </ListGroup.Item>
-          </NavLink>
         </ListGroup>
         <br />
         <h4 style={{ textAlign: "center" }}>ORDERS</h4>
         <ListGroup>
-          <NavLink style={navStyle} to="/orderDisplay">
+          <NavLink style={navStyle} to="/display">
             <ListGroup.Item
-              className="NavLink"
               onMouseEnter={handleHover}
               onMouseLeave={handleExit}
             >
               open orders
             </ListGroup.Item>
           </NavLink>
-          <NavLink style={navStyle} to="/orderDisplay">
+          <NavLink style={navStyle} to="/ready">
             <ListGroup.Item
               className="NavLink"
               onMouseEnter={handleHover}
@@ -81,7 +73,7 @@ function AdminMenu(): JSX.Element {
               ready orders
             </ListGroup.Item>
           </NavLink>
-          <NavLink style={navStyle} to="/orderDisplay">
+          <NavLink style={navStyle} to="/served">
             <ListGroup.Item
               className="NavLink"
               onMouseEnter={handleHover}
@@ -90,8 +82,9 @@ function AdminMenu(): JSX.Element {
               served orders
             </ListGroup.Item>
           </NavLink>
-          <NavLink style={navStyle} to="/orderDisplay">
+          <NavLink style={navStyle} to="/paid">
             <ListGroup.Item
+              className="NavLink"
               onMouseEnter={handleHover}
               onMouseLeave={handleExit}
             >

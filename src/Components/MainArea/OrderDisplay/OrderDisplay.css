@@ -1,6 +1,7 @@
 .OrderDisplay {
   display: flex;
   height: 85vh;
+  overflow-y: auto;
 }
 
 .OrderDisplay .OrderDiv {

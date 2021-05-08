@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import DishModel from "../../../../Models/DishModel";
@@ -10,18 +10,25 @@ import "./UpdateDish.css";
 
 function UpdateDish(): JSX.Element {
   const token = store.getState().AuthState.auth.token;
+  let [dishes, setDishes] = useState<DishModel[]>([]);
   let [fetchedDish, setFetchedDish] = useState<DishModel>(null);
   const handleCategory = (e: SyntheticEvent) => {
     let temp = { ...fetchedDish };
     temp.category = (e.target as HTMLInputElement).value as CategoryEnum;
     setFetchedDish(temp);
   };
+
+  const handleCheck = () => {
+    console.log(fetchedDish.available);
+    let temp = { ...fetchedDish };
+    temp.available = !temp.available;
+    setFetchedDish(temp);
+  };
   const handleFetch = () => {
-    let updateId = +(document.querySelector(
-      "#updateDishId"
-    ) as HTMLInputElement).value;
+    const formData = new FormData(document.querySelector("#updateFormId"));
+    const dishId = formData.get("updateDishId");
     axios
-      .get<DishModel>(globals.urls.localUrl + "order/getDish/" + updateId)
+      .get<DishModel>(globals.urls.localUrl + "order/getDish/" + dishId)
       .then((res) => {
         console.log(res.data);
         setFetchedDish(res.data);
@@ -38,28 +45,59 @@ function UpdateDish(): JSX.Element {
       .put<DishModel>(globals.urls.localUrl + "admin/updateDish", formData, {
         headers: { token: token, "Content-Type": "multipart/form-data" },
       })
-      .then((response) => {
-        console.log(response.data);
+      .then((res) => {
+        console.log("response " + res.data);
+        getMenu();
+        alert("Dish Updated.");
       })
       .catch((err) => {
         alert(err);
       });
   };
+
+  const getMenu = () => {
+    axios
+      .get(globals.urls.localUrl + "order/getMenu")
+      .then((response) => {
+        setDishes(response.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  useEffect(() => {
+    getMenu();
+  }, []);
+
   return (
-    <div className="NewDish">
+    <div className="UpdateDish">
       <h3>Update Dish</h3>
       <div className="FormDish">
         <Form id="updateFormId" onSubmit={onSubmit}>
           <Form.Group>
-            <Form.Label>ID:</Form.Label>
-            <Form.Control id="updateDishId" name="id" />
+            <Form.Label>Select dish:</Form.Label>
+            <Form.Control name="updateDishId" as="select">
+              {dishes.map((dish) => {
+                return (
+                  <option key={dish.id} value={dish.id}>
+                    {dish.id}) {dish.name}
+                  </option>
+                );
+              })}
+            </Form.Control>
           </Form.Group>
           <Button type="button" onClick={handleFetch}>
             Fetch
           </Button>
           <Form.Group>
             <Form.Label>Name:</Form.Label>
-            <Form.Control defaultValue={fetchedDish?.name} name="name" />
+            <Form.Control
+              defaultValue={fetchedDish?.name}
+              name="name"
+              required
+              minLength={4}
+            />
           </Form.Group>
           <Form.Group>
             <Form.Label>description:</Form.Label>
@@ -67,11 +105,17 @@ function UpdateDish(): JSX.Element {
               as="textarea"
               defaultValue={fetchedDish?.description}
               name="description"
+              minLength={25}
             />
           </Form.Group>
           <Form.Group>
             <Form.Label>Price:</Form.Label>
-            <Form.Control defaultValue={fetchedDish?.price} name="price" />
+            <Form.Control
+              defaultValue={fetchedDish?.price}
+              name="price"
+              required
+              min="1"
+            />
           </Form.Group>
           <Form.Group controlId="updateDishForm.category">
             <Form.Label>Category:</Form.Label>
@@ -96,6 +140,8 @@ function UpdateDish(): JSX.Element {
               label="Available"
               value="on"
               name="available"
+              checked={fetchedDish?.available}
+              onChange={handleCheck}
             />
           </Form.Group>
           <Form.Group>
