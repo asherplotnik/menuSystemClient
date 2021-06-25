@@ -11,6 +11,7 @@ import OrderPayload from "../../../Models/OrderPayload";
 import { OrderType } from "../../../Models/Enums";
 import store from "../../../Redux/Store";
 import { useHistory } from "react-router";
+import { errorAlert } from "../../../Services/errorService";
 
 function MakeOrder(): JSX.Element {
   let [dishes, setDishes] = useState<DishModel[]>([]);
@@ -94,9 +95,9 @@ function MakeOrder(): JSX.Element {
         setSelectedDishes([]);
         alert("Order Sent.");
       })
-      .catch(() => {
+      .catch((err) => {
         setSelectedDishes([]);
-        alert("ERROR");
+        errorAlert(err);
       });
   };
 

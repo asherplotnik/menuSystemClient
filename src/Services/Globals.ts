@@ -4,7 +4,7 @@ class DevelopmentGlobals extends Globals {
     public urls = {
         products: "http://localhost:8080/api/products/",
         couponImages: "http://localhost:8080/images/",
-        localUrl : "http://192.168.1.104:8080/"
+        localUrl : "http://localhost:8080/"
     };
 }
 

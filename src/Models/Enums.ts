@@ -15,7 +15,9 @@ export enum LevelEnum {
     CUSTOMER="CUSTOMER",
     KITCHEN="KITCHEN",
     ADMIN="ADMIN",
-    SERVICE="SERVICE"
+    SERVICE="SERVICE",
+    BRAND_MANAGER="BRAND_MANAGER",
+    TABLE="TABLE"
 }
 
 export enum CategoryEnum {

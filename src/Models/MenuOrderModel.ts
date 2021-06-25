@@ -8,7 +8,7 @@ class MenuOrderModel {
     public time:Date=new Date();
     public note:string="";
     public status:StatusEnum=StatusEnum.NONE;
-    public customer:CustomerModel= new CustomerModel();
+    public user:CustomerModel= new CustomerModel();
     public entries:MenuEntryModel[] = [];
 }
 

@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import DishModel from "../../../../Models/DishModel";
 import { CategoryEnum } from "../../../../Models/Enums";
 import store from "../../../../Redux/Store";
+import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
 import "./NewDish.css";
 
@@ -34,7 +35,7 @@ function NewDish(): JSX.Element {
         alert("Dish added.");
       })
       .catch((err) => {
-        alert(err);
+        errorAlert(err);
       });
   };
   return (

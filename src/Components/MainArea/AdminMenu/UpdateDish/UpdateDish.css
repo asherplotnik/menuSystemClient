@@ -2,3 +2,13 @@
   width: 50%;
   margin: auto;
 }
+
+.UpdateDish .FlexDiv {
+  display: flex;
+  flex-direction: row;
+}
+
+.UpdateDish .FlexDiv img {
+  height: 200px;
+  margin-left: 20px;
+}

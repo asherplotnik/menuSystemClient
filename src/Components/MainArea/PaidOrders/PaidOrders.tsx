@@ -16,40 +16,25 @@ function PaidOrders(): JSX.Element {
   const history = useHistory();
 
   const handleClickDates = (e: SyntheticEvent, indexDate: number) => {
-    if ((e.target as HTMLElement).className.includes("ShowDate")) {
-      (e.target as HTMLElement).className = (e.target as HTMLElement).className.slice(
-        0,
-        (e.target as HTMLElement).className.length - 9
-      );
-      if (showDates.indexOf(indexDate) > -1) {
-        let temp = [...showDates];
-        temp.splice(showDates.indexOf(indexDate), 1);
-        setShowDates(temp);
-      }
+    if (showDates.indexOf(indexDate) > -1) {
+      let temp = [...showDates];
+      temp.splice(showDates.indexOf(indexDate), 1);
+      setShowDates(temp);
     } else {
-      (e.target as HTMLElement).className =
-        (e.target as HTMLElement).className + " ShowDate";
       let temp = [...showDates];
       temp.push(indexDate);
       setShowDates(temp);
     }
   };
-  const handleClickOrders = (e: SyntheticEvent, indexOrder: number) => {
-    if ((e.target as HTMLElement).className.includes("ShowDate")) {
-      (e.target as HTMLElement).className = (e.target as HTMLElement).className.slice(
-        0,
-        (e.target as HTMLElement).className.length - 9
-      );
-      if (showOrders.indexOf(indexOrder) > -1) {
-        let temp = [...showOrders];
-        temp.splice(showOrders.indexOf(indexOrder), 1);
-        setShowOrders(temp);
-      }
-    } else {
-      (e.target as HTMLElement).className =
-        (e.target as HTMLElement).className + " ShowDate";
+
+  const handleClickOrders = (e: SyntheticEvent, orderId: number) => {
+    if (showOrders.indexOf(orderId) === -1) {
       let temp = [...showOrders];
-      temp.push(indexOrder);
+      temp.push(orderId);
+      setShowOrders(temp);
+    } else {
+      let temp = [...showOrders];
+      temp.splice(showOrders.indexOf(orderId), 1);
       setShowOrders(temp);
     }
   };
@@ -119,8 +104,8 @@ function PaidOrders(): JSX.Element {
               <div className="MarginTop">
                 <ListGroup>
                   {dateDiv.orders.map((order, indexOrder) => {
-                    let orderGroup = <></>;
-                    if (showOrders.indexOf(indexOrder) > -1) {
+                    let orderGroup = <div></div>;
+                    if (showOrders.indexOf(order.id) > -1) {
                       orderGroup = (
                         <div className="MarginTop">
                           <ListGroup>
@@ -140,13 +125,13 @@ function PaidOrders(): JSX.Element {
                       <ListGroup.Item key={indexOrder}>
                         <div
                           onClick={(event) =>
-                            handleClickOrders(event, indexOrder)
+                            handleClickOrders(event, order.id)
                           }
                         >
-                          ID: {order.id} | CUSTOMER: {order.customer.name} |{" "}
-                          DATE: {currDate.getDate()}/{currDate.getMonth()}/
-                          {currDate.getFullYear()} | TYPE: {order.orderType} |{" "}
-                          NOTE: {order.note} | TOTAL: {calculateTotal(order)}
+                          ID: {order.id} | Customer: {order.user.name} | Date:{" "}
+                          {currDate.getDate()}/{currDate.getMonth()}/
+                          {currDate.getFullYear()} | Type: {order.orderType} |{" "}
+                          Note: {order.note} | Total: {calculateTotal(order)}
                         </div>
                         {orderGroup}
                       </ListGroup.Item>

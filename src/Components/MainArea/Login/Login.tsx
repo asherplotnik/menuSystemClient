@@ -8,6 +8,8 @@ import store from "../../../Redux/Store";
 import { setAuthAction } from "../../../Redux/AuthState";
 import { LevelEnum } from "../../../Models/Enums";
 import { useHistory } from "react-router";
+import { useEffect } from "react";
+import { errorAlert } from "../../../Services/errorService";
 function Login(): JSX.Element {
   interface IFormInput {
     email: string;
@@ -18,24 +20,37 @@ function Login(): JSX.Element {
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
+
+  const switchLevel = (level: LevelEnum) => {
+    switch (level) {
+      case LevelEnum.KITCHEN:
+        history.push("/display");
+        break;
+      case LevelEnum.TABLE:
+        history.push("/makeOrder");
+        break;
+      case LevelEnum.ADMIN:
+        history.push("/adminMenu");
+        break;
+    }
+  };
+  useEffect(() => {
+    if (store.getState().AuthState.auth.level !== LevelEnum.NONE) {
+      switchLevel(store.getState().AuthState.auth.level);
+    }
+  });
   const handleLogin = (loginDetails: IFormInput) => {
     axios
       .post<CustomerModel>(globals.urls.localUrl + "auth/signIn", loginDetails)
       .then((response) => {
         store.dispatch(setAuthAction(response.data));
-        switch (response.data.level) {
-          case LevelEnum.KITCHEN:
-            history.push("/display");
-            break;
-          case LevelEnum.CUSTOMER:
-            history.push("/makeOrder");
-            break;
-          case LevelEnum.ADMIN:
-            history.push("/adminMenu");
-            break;
-        }
+        switchLevel(response.data.level);
+      })
+      .catch((err) => {
+        errorAlert(err);
       });
   };
+
   const history = useHistory();
   return (
     <div className="Login Box">

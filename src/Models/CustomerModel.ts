@@ -6,7 +6,8 @@ class CustomerModel {
 	public address:string="";
 	public phone:string="";
 	public level:LevelEnum=LevelEnum.NONE;
-	public email:string="";
+	public affiliation:number;
+    public email:string="";
 	public token:string="";
 
 }

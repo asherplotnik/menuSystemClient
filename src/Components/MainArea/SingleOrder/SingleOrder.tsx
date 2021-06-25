@@ -91,7 +91,7 @@ function SingleOrder(props: MoProps): JSX.Element {
             >
               {props.order.orderType}
             </div>
-            <span>Name: {props.order.customer.name}</span> <br />
+            <span>Name: {props.order.user.name}</span> <br />
             Note: {props.order.note}
           </ListGroup.Item>
           <ListGroup.Item key={3}>

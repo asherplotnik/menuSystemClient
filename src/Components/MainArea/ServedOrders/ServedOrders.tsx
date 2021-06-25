@@ -94,7 +94,7 @@ function ServedOrders(): JSX.Element {
                     >
                       {order.orderType}
                     </div>
-                    <span>Name: {order.customer.name}</span> <br />
+                    <span>Name: {order.user.name}</span> <br />
                     Note: {order.note}
                   </ListGroup.Item>
                   <ListGroup.Item key={3}>

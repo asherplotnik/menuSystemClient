@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import DishModel from "../../../../Models/DishModel";
 import { CategoryEnum } from "../../../../Models/Enums";
 import store from "../../../../Redux/Store";
+import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
 import "./UpdateDish.css";
 
@@ -51,7 +52,7 @@ function UpdateDish(): JSX.Element {
         alert("Dish Updated.");
       })
       .catch((err) => {
-        alert(err);
+        errorAlert(err);
       });
   };
 
@@ -133,31 +134,40 @@ function UpdateDish(): JSX.Element {
               <option value={CategoryEnum.DESSERT}>Dessert</option>
             </Form.Control>
           </Form.Group>
-
-          <Form.Group controlId="availableCheck">
-            <Form.Check
-              type="checkbox"
-              label="Available"
-              value="on"
-              name="available"
-              checked={fetchedDish?.available}
-              onChange={handleCheck}
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.File
-              id="ControlFile1"
-              label="Choose primary image"
-              name="image1"
-            />
-          </Form.Group>
-          <Form.Group>
-            <Form.File
-              id="ControlFile2"
-              label="Choose secondary image"
-              name="image2"
-            />
-          </Form.Group>
+          <div className="FlexDiv">
+            <div>
+              <Form.Group controlId="availableCheck">
+                <Form.Check
+                  type="checkbox"
+                  label="Available"
+                  value="on"
+                  name="available"
+                  checked={fetchedDish?.available}
+                  onChange={handleCheck}
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.File
+                  id="ControlFile1"
+                  label="Choose primary image"
+                  name="image1"
+                />
+              </Form.Group>
+              <Form.Group>
+                <Form.File
+                  id="ControlFile2"
+                  label="Choose secondary image"
+                  name="image2"
+                />
+              </Form.Group>
+            </div>
+            <div>
+              <img src={fetchedDish?.primaryImage} alt="primary" />
+            </div>
+            <div>
+              <img src={fetchedDish?.secondaryImage} alt="secondary" />
+            </div>
+          </div>
           <Button type="submit">Submit</Button>
         </Form>
         <br />

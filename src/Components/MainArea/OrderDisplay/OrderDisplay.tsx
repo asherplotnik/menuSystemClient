@@ -31,7 +31,12 @@ function OrderDisplay(): JSX.Element {
     if (!store.getState().AuthState.auth.token) {
       history.push("/login");
     }
-    getOrders();
+    let refreshOrders = setInterval(() => {
+      getOrders();
+    }, 5000);
+    return () => {
+      clearInterval(refreshOrders);
+    };
   }, [history, getOrders]);
   return (
     <div className="OrderDisplay">

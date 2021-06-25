@@ -11,7 +11,7 @@ export class AuthState {
         const stored = JSON.parse(localStorage.getItem("auth"));
         if(stored) {
             this.auth = stored;
-        }
+        } 
     }
 }
 
@@ -39,7 +39,7 @@ export function setAuthAction(auth: AuthModel): AuthAction {
     return { type: AuthActionType.SetAuth, payload: auth };
 }
 
-export function removeAuthAction(session: AuthModel): AuthAction {
+export function removeAuthAction(): AuthAction {
     return { type: AuthActionType.RemoveAuth};
 }
 
@@ -56,7 +56,7 @@ export function AuthReducer(currentState: AuthState = new AuthState(), action: A
             localStorage.setItem("auth", JSON.stringify(newState.auth));
             break;
         case AuthActionType.RemoveAuth:
-            newState.auth = null;
+            newState.auth = new CustomerModel();
             localStorage.removeItem("auth"); // clear user from the local storage.
             break;
     }

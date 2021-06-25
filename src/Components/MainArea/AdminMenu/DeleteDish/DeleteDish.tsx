@@ -4,6 +4,7 @@ import { Button, Form } from "react-bootstrap";
 import { NavLink } from "react-router-dom";
 import DishModel from "../../../../Models/DishModel";
 import store from "../../../../Redux/Store";
+import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
 import "./DeleteDish.css";
 
@@ -41,7 +42,7 @@ function DeleteDish(): JSX.Element {
         alert(res.data);
       })
       .catch((err) => {
-        alert(err);
+        errorAlert(err);
       });
   };
   return (
