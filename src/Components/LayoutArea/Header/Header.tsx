@@ -15,6 +15,9 @@ function Header(): JSX.Element {
     history.push("/");
   };
 
+  useEffect(()=>{
+    setState(store.getState().AuthState.auth);
+  },[])
   useEffect(() => {
     const unSubscribe = store.subscribe(() => {
       setState(store.getState().AuthState.auth);
@@ -24,14 +27,16 @@ function Header(): JSX.Element {
       unSubscribe();
     };
   }, []);
+  let hide = state?.level === undefined || state?.level === LevelEnum.NONE;
+  console.log(state?.level);
   return (
     <div className="Header">
       <div>
         <h3>MENU SYSTEM</h3>
       </div>
-      {state?.level !== LevelEnum.NONE && (
+      {!hide && (
         <div>
-          <Button onClick={handleLogout}>LOGOUT</Button>
+          <span>{state?.name}</span> {" "}<Button onClick={handleLogout}>LOGOUT</Button>
         </div>
       )}
     </div>

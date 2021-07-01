@@ -24,36 +24,6 @@ function AdminMenu(): JSX.Element {
     <div className="AdminMenu">
       <h3>Admin control panel</h3>
       <div className="List">
-        <h4 style={{ textAlign: "center" }}>MENU</h4>
-        <ListGroup>
-          <NavLink style={navStyle} to="/newDish">
-            <ListGroup.Item
-              onMouseEnter={handleHover}
-              onMouseLeave={handleExit}
-            >
-              Add new dish
-            </ListGroup.Item>
-          </NavLink>
-          <NavLink style={navStyle} to="/updateDish">
-            <ListGroup.Item
-              className="NavLink"
-              onMouseEnter={handleHover}
-              onMouseLeave={handleExit}
-            >
-              Update a dish
-            </ListGroup.Item>
-          </NavLink>
-          <NavLink style={navStyle} to="/deleteDish">
-            <ListGroup.Item
-              className="NavLink"
-              onMouseEnter={handleHover}
-              onMouseLeave={handleExit}
-            >
-              Delete a dish
-            </ListGroup.Item>
-          </NavLink>
-        </ListGroup>
-        <br />
         <h4 style={{ textAlign: "center" }}>ORDERS</h4>
         <ListGroup>
           <NavLink style={navStyle} to="/display">
@@ -89,6 +59,96 @@ function AdminMenu(): JSX.Element {
               onMouseLeave={handleExit}
             >
               closed orders
+            </ListGroup.Item>
+          </NavLink>
+        </ListGroup>
+        <br />
+        <h4 style={{ textAlign: "center" }}>BRANCHES</h4>
+        <ListGroup>
+          <NavLink style={navStyle} to="/newBranch">
+            <ListGroup.Item
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Add new branch
+            </ListGroup.Item>
+          </NavLink>
+          <NavLink style={navStyle} to="/updateBranch">
+            <ListGroup.Item
+              className="NavLink"
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Update a branch
+            </ListGroup.Item>
+          </NavLink>
+          <NavLink style={navStyle} to="/deleteBranch">
+            <ListGroup.Item
+              className="NavLink"
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Delete a branch
+            </ListGroup.Item>
+          </NavLink>
+        </ListGroup>
+        <br />
+        <h4 style={{ textAlign: "center" }}>MENU</h4>
+        <ListGroup>
+          <NavLink style={navStyle} to="/newDish">
+            <ListGroup.Item
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Add new dish
+            </ListGroup.Item>
+          </NavLink>
+          <NavLink style={navStyle} to="/updateDish">
+            <ListGroup.Item
+              className="NavLink"
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Update a dish
+            </ListGroup.Item>
+          </NavLink>
+          <NavLink style={navStyle} to="/deleteDish">
+            <ListGroup.Item
+              className="NavLink"
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Delete a dish
+            </ListGroup.Item>
+          </NavLink>
+        </ListGroup>
+        <br />
+        <h4 style={{ textAlign: "center" }}>USERS</h4>
+        <ListGroup>
+          <NavLink style={navStyle} to="/newUser">
+            <ListGroup.Item
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Add new user
+            </ListGroup.Item>
+          </NavLink>
+          <NavLink style={navStyle} to="/updateUser">
+            <ListGroup.Item
+              className="NavLink"
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Update a user
+            </ListGroup.Item>
+          </NavLink>
+          <NavLink style={navStyle} to="/deleteUser">
+            <ListGroup.Item
+              className="NavLink"
+              onMouseEnter={handleHover}
+              onMouseLeave={handleExit}
+            >
+              Delete a user
             </ListGroup.Item>
           </NavLink>
         </ListGroup>

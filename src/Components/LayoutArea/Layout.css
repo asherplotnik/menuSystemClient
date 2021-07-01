@@ -4,6 +4,7 @@
   display: grid;
   grid-template-rows: 9% auto 5%;
   grid-template-columns: repeat(8, 1fr);
+  overflow-y: auto;
 }
 
 .Layout > header,
@@ -18,7 +19,4 @@
 .Layout,
 .Layout > * {
   border: 1px solid lightgrey;
-}
-
-.SideComponent {
 }

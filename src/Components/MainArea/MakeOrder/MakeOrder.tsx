@@ -117,6 +117,7 @@ function MakeOrder(): JSX.Element {
 
   return (
     <div className="MakeOrder">
+      <img className="BackImg" src = "https://i.ibb.co/0BRfdw5/salad2.jpg"/>
       <Tabs
         id="controlled-tab-example"
         activeKey={key}

@@ -16,7 +16,6 @@ export enum LevelEnum {
     KITCHEN="KITCHEN",
     ADMIN="ADMIN",
     SERVICE="SERVICE",
-    BRAND_MANAGER="BRAND_MANAGER",
     TABLE="TABLE"
 }
 
