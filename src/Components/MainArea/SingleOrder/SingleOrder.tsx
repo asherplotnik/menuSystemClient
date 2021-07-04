@@ -1,9 +1,9 @@
-import axios from "axios";
 import { useState } from "react";
 import { Alert, Card, ListGroup } from "react-bootstrap";
 import MenuEntryModel from "../../../Models/MenuEntryModel";
 import MenuOrderModel from "../../../Models/MenuOrderModel";
 import globals from "../../../Services/Globals";
+import jwtAxios from "../../../Services/jwtAxios";
 import "./SingleOrder.css";
 
 interface MoProps {
@@ -17,15 +17,12 @@ function SingleOrder(props: MoProps): JSX.Element {
 
   const handleOrderReady = () => {
     if (props.order.entries.length === updatePage) {
-      axios
+      jwtAxios
         .post(
           globals.urls.localUrl +
             "display/updateOrderStatus/" +
             props.order.id +
-            "/READY",
-          {},
-          { headers: { token: props.token } }
-        )
+            "/READY",{})
         .then(() => {
           props.getOrders();
         })
@@ -38,12 +35,9 @@ function SingleOrder(props: MoProps): JSX.Element {
   const handleUpdateEntry = (entry: MenuEntryModel) => {
     if (entry.ready) {
       entry.ready = null;
-      axios
+      jwtAxios
         .post(
-          globals.urls.localUrl + "display/updateEntryStatus/" + entry.id,
-          {},
-          { headers: { token: props.token } }
-        )
+          globals.urls.localUrl + "display/updateEntryStatus/" + entry.id,{})
         .then(() => {
           setUpdatePage(updatePage - 1);
         })
@@ -52,12 +46,9 @@ function SingleOrder(props: MoProps): JSX.Element {
         });
     } else {
       entry.ready = new Date();
-      axios
+      jwtAxios
         .post(
-          globals.urls.localUrl + "display/updateEntryStatus/" + entry.id,
-          {},
-          { headers: { token: props.token } }
-        )
+          globals.urls.localUrl + "display/updateEntryStatus/" + entry.id,{})
         .then(() => {
           setUpdatePage(updatePage + 1);
         })

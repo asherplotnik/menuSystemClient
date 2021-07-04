@@ -12,7 +12,7 @@ function Header(): JSX.Element {
   const [state, setState] = useState<CustomerModel>();
   const handleLogout = () => {
     store.dispatch(removeAuthAction());
-    history.push("/");
+    history.push("/login");
   };
 
   useEffect(()=>{

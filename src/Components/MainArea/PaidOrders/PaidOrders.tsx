@@ -1,6 +1,5 @@
 import "./PaidOrders.css";
-import axios from "axios";
-import React, { SyntheticEvent, useCallback, useEffect, useState } from "react";
+import React, { SyntheticEvent, useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import MenuOrderModel from "../../../Models/MenuOrderModel";
 import store from "../../../Redux/Store";
@@ -8,8 +7,8 @@ import globals from "../../../Services/Globals";
 import { ListGroup } from "react-bootstrap";
 import { StatusEnum } from "../../../Models/Enums";
 import OrdersByDates from "../../../Models/OrdersByDates";
+import jwtAxios from "../../../Services/jwtAxios";
 function PaidOrders(): JSX.Element {
-  let [token, setToken] = useState(store.getState().AuthState.auth.token);
   let [orders, setOrders] = useState<MenuOrderModel[]>([]);
   let [showDates, setShowDates] = useState([]);
   let [showOrders, setShowOrders] = useState([]);
@@ -39,21 +38,14 @@ function PaidOrders(): JSX.Element {
     }
   };
 
-  const getOrders = useCallback(
-    () =>
-      axios
+  const getOrders = () =>
+    jwtAxios
         .get<MenuOrderModel[]>(
-          globals.urls.localUrl + "display/getOrdersByStatus/PAID",
-          {
-            headers: { token: token },
-          }
-        )
+          globals.urls.localUrl + "display/getOrdersByStatus/PAID")
         .then((response) => {
           setOrders(response.data);
         })
-        .catch(function (error) {}),
-    [token]
-  );
+        .catch(function (error) {});
 
   const calculateTotal = (order: MenuOrderModel): number => {
     let total = 0;
@@ -65,12 +57,11 @@ function PaidOrders(): JSX.Element {
   };
 
   useEffect(() => {
-    setToken(store.getState().AuthState.auth.token);
     if (!store.getState().AuthState.auth.token) {
       history.push("/login");
     }
     getOrders();
-  }, [history, getOrders]);
+  }, [history]);
 
   const arrangeOrdersByDate = (): JSX.Element => {
     let orderList: OrdersByDates[] = [];

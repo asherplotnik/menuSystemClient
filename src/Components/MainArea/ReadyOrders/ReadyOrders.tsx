@@ -1,25 +1,21 @@
 import "./ReadyOrders.css";
 
-import axios from "axios";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router";
 import MenuOrderModel from "../../../Models/MenuOrderModel";
 import store from "../../../Redux/Store";
 import globals from "../../../Services/Globals";
 import { Alert, Card, ListGroup } from "react-bootstrap";
+import jwtAxios from "../../../Services/jwtAxios";
 
 function ReadyOrders(): JSX.Element {
-  let [token, setToken] = useState(store.getState().AuthState.auth.token);
   let [orders, setOrders] = useState<MenuOrderModel[]>([]);
   const history = useHistory();
 
   const handleOrderServed = (id: number) => {
-    axios
+    jwtAxios
       .post(
-        globals.urls.localUrl + "display/updateOrderStatus/" + id + "/SERVED",
-        {},
-        { headers: { token: token } }
-      )
+        globals.urls.localUrl + "display/updateOrderStatus/" + id + "/SERVED")
       .then(() => {
         getOrders();
       })
@@ -28,29 +24,21 @@ function ReadyOrders(): JSX.Element {
       });
   };
 
-  const getOrders = useCallback(
-    () =>
-      axios
+  const getOrders = () =>
+    jwtAxios
         .get<MenuOrderModel[]>(
-          globals.urls.localUrl + "display/getOrdersByStatus/READY",
-          {
-            headers: { token: token },
-          }
-        )
+          globals.urls.localUrl + "display/getOrdersByStatus/READY")
         .then(function (response) {
           setOrders(response.data);
         })
-        .catch(function (error) {}),
-    [token]
-  );
+        .catch(function (error) {});
 
   useEffect(() => {
-    setToken(store.getState().AuthState.auth.token);
     if (!store.getState().AuthState.auth.token) {
       history.push("/login");
     }
     getOrders();
-  }, [history, getOrders]);
+  }, [history]);
   return (
     <div className="ReadyOrders">
       {orders &&

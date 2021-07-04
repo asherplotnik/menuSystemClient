@@ -1,16 +1,13 @@
-import axios from "axios";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
 import DishModel from "../../../../Models/DishModel";
 import { CategoryEnum } from "../../../../Models/Enums";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
+import jwtAxios from "../../../../Services/jwtAxios";
 import "./UpdateDish.css";
 
 function UpdateDish(): JSX.Element {
-  const token = store.getState().AuthState.auth.token;
   let [dishes, setDishes] = useState<DishModel[]>([]);
   let [fetchedDish, setFetchedDish] = useState<DishModel>(null);
   const handleCategory = (e: SyntheticEvent) => {
@@ -28,7 +25,7 @@ function UpdateDish(): JSX.Element {
   const handleFetch = () => {
     const formData = new FormData(document.querySelector("#updateFormId"));
     const dishId = formData.get("updateDishId");
-    axios
+    jwtAxios
       .get<DishModel>(globals.urls.localUrl + "order/getDish/" + dishId)
       .then((res) => {
         console.log(res.data);
@@ -42,9 +39,9 @@ function UpdateDish(): JSX.Element {
     e.preventDefault();
     const formData = new FormData(document.querySelector("#updateFormId"));
     formData.set("id", fetchedDish.id.toString());
-    axios
+    jwtAxios
       .put<DishModel>(globals.urls.localUrl + "admin/updateDish", formData, {
-        headers: { token: token, "Content-Type": "multipart/form-data" },
+        headers: {"Content-Type": "multipart/form-data" },
       })
       .then((res) => {
         console.log("response " + res.data);
@@ -57,7 +54,7 @@ function UpdateDish(): JSX.Element {
   };
 
   const getMenu = () => {
-    axios
+    jwtAxios
       .get(globals.urls.localUrl + "order/getMenu")
       .then((response) => {
         setDishes(response.data);
@@ -172,9 +169,6 @@ function UpdateDish(): JSX.Element {
         </Form>
         <br />
       </div>
-      <NavLink to="adminMenu">
-        <Button type="button">RETURN TO MENU</Button>
-      </NavLink>
     </div>
   );
 }

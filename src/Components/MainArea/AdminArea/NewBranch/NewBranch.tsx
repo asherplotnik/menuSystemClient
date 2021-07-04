@@ -1,19 +1,15 @@
 import "./NewBranch.css";
-import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
 import BranchModel from "../../../../Models/BranchModel";
+import jwtAxios from "../../../../Services/jwtAxios";
 
 function NewBranch(): JSX.Element {
   const onSubmit = (data: BranchModel) => {
-    axios
-      .post<BranchModel>(globals.urls.localUrl + "admin/addBranch", data, {
-        headers: { token: token },
-      })
+    jwtAxios
+      .post<BranchModel>(globals.urls.localUrl + "admin/addBranch", data)
       .then((response) => {
         console.log(response.data);
         alert("Branch added.");
@@ -22,7 +18,6 @@ function NewBranch(): JSX.Element {
         errorAlert(err);
       });
   };
-  const token = store.getState().AuthState.auth.token;
   const {
     register,
     handleSubmit,
@@ -65,9 +60,6 @@ function NewBranch(): JSX.Element {
         </Form>
         <br />
       </div>
-      <NavLink to="adminMenu">
-        <Button type="button">RETURN TO MENU</Button>
-      </NavLink>
     </div>
   );
 }

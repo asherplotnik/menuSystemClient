@@ -1,43 +1,34 @@
 import "./NewUser.css";
 import CustomerModel from "../../../../Models/CustomerModel";
-import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
 import { LevelEnum } from "../../../../Models/Enums";
 import BranchModel from "../../../../Models/BranchModel";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
+import jwtAxios from "../../../../Services/jwtAxios";
 function NewUser(): JSX.Element {
   let [branches, setBranches] = useState<BranchModel[]>([]);
-  let [token, setToken] = useState(store.getState().AuthState.auth.token);
   let [disableField, setDisableField] = useState("")
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<CustomerModel>();
-  const getBranches = useCallback(() => {
-    axios
-      .get(globals.urls.localUrl + "admin/getBranches", {
-        headers: { token: token },
-      })
+  const getBranches = () => {
+    jwtAxios
+      .get(globals.urls.localUrl + "admin/getBranches")
       .then((response) => {
         setBranches(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [token]);
+  }
 
   useEffect(() => {
     getBranches();
-  }, [getBranches]);
-
-  useEffect(() => {
-    setToken(store.getState().AuthState.auth.token);
   }, []);
 
 const handleLevel = (e:ChangeEvent<HTMLInputElement>) => {
@@ -52,10 +43,15 @@ const handleLevel = (e:ChangeEvent<HTMLInputElement>) => {
 
 
   const onSubmit = (data: CustomerModel) => {
-    axios
-      .post<CustomerModel>(globals.urls.localUrl + "admin/addUser/"+data.branchId, data, {
-        headers: { token: token},
-      })
+    if (data.level === LevelEnum.NONE){
+      alert("Choose Level");
+      return
+    }
+    if (!data.branchId){
+      data.branchId=-1
+    }
+    jwtAxios
+      .post<CustomerModel>(globals.urls.localUrl + "admin/addUser/"+data.branchId, data)
       .then((response) => {
         console.log(response.data);
         alert("User added.");
@@ -170,9 +166,6 @@ const handleLevel = (e:ChangeEvent<HTMLInputElement>) => {
         </Form>
         <br />
       </div>
-      <NavLink to="adminMenu">
-        <Button type="button">RETURN TO MENU</Button>
-      </NavLink>
     </div>
   );
 }

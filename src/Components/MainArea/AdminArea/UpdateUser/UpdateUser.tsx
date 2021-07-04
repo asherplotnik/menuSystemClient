@@ -1,47 +1,38 @@
 import "./UpdateUser.css";
 import CustomerModel from "../../../../Models/CustomerModel";
-import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
 import { LevelEnum } from "../../../../Models/Enums";
 import BranchModel from "../../../../Models/BranchModel";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import UserModel from "../../../../Models/UserModel";
+import jwtAxios from "../../../../Services/jwtAxios";
 function UpdateUser(): JSX.Element {
     let [users, setUsers] = useState<UserModel[]>([]);
     let [branches, setBranches] = useState<BranchModel[]>([]);
-    let [token, setToken] = useState(store.getState().AuthState.auth.token);
     let [disableField, setDisableField] = useState("")
     const {
       register,
       handleSubmit,
       formState: { errors }, setValue
     } = useForm<CustomerModel>();
-    const getBranches = useCallback(() => {
-      axios
-        .get(globals.urls.localUrl + "admin/getBranches", {
-          headers: { token: token },
-        })
+    const getBranches = () => {
+      jwtAxios
+        .get(globals.urls.localUrl + "admin/getBranches")
         .then((response) => {
           setBranches(response.data);
         })
         .catch((err) => {
           console.log(err);
         });
-    }, [token]);
+    };
   
     useEffect(() => {
       getBranches();
-    }, [getBranches]);
-  
-    useEffect(() => {
-      setToken(store.getState().AuthState.auth.token);
     }, []);
-  
+    
   const handleLevel = (e:ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === LevelEnum.CUSTOMER){
       setDisableField("customer")
@@ -53,49 +44,70 @@ function UpdateUser(): JSX.Element {
   }
 
   const handleUser = (e:ChangeEvent<HTMLInputElement>) => {
+    console.log(e.target.value);
+    if (e.target.value === "-1"){
+      setValue("name","");
+      setValue("address","");
+      setValue("phone","");
+      setValue("level",LevelEnum.NONE);
+      setValue("email","");
+      setValue("branchId",-1);
+      setValue("password","");
+      return
+    }
     const user = users.find(currentUser => currentUser.id === parseInt(e.target.value))
     setValue("level",user.level);
-    if (user.level === LevelEnum.CUSTOMER){
-      setDisableField("customer")
-    } else if (user.level === LevelEnum.ADMIN) {
-       setDisableField("admin");
-    } else {
-      setDisableField("");
-    }
     setValue("name",user.name);
     setValue("address",user.address);
     setValue("phone",user.phone);
     setValue("level",user.level);
     setValue("email",user.email);
-    console.log(user.branch?.id);
     const branch = branches.find(currentBranch => currentBranch?.id === user.branch?.id)
     setValue("branchId",branch?.id);
-
+    if (user.level === LevelEnum.CUSTOMER){
+      setValue("address"," ");
+      setValue("phone"," ");
+      setDisableField("customer")
+    } else if (user.level === LevelEnum.ADMIN) {
+       setValue("address"," ");
+       setValue("phone"," ");
+       setValue("branchId",-1);
+       setDisableField("admin");
+    } else {
+      setDisableField("");
+    }
   }
   
-  const getUsers = useCallback(() => {
-    axios
-      .get(globals.urls.localUrl + "admin/getUsers", {
-        headers: { token: token },
-      })
+  const getUsers = () => {
+    jwtAxios
+      .get(globals.urls.localUrl + "admin/getUsers")
       .then((response) => {
         setUsers(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  },[token])
+  }
   
   useEffect(() => {
     getUsers();
-  },[getUsers]);
+  },[]);
 
     const onSubmit = (data: CustomerModel) => {
-      console.log(data.id);
-      axios
-        .put<CustomerModel>(globals.urls.localUrl + "admin/updateUser/"+data.branchId, data, {
-          headers: { token: token},
-        })
+      if (data.level === LevelEnum.NONE){
+        alert("Choose Level");
+        return
+      }
+      console.log(data.id)
+      if (data.id.toString() === "-1"){
+        alert("Choose User");
+        return
+      }
+      if (!data.branchId){
+        data.branchId=-1
+      }
+      jwtAxios
+        .put<CustomerModel>(globals.urls.localUrl + "admin/updateUser/"+data.branchId, data)
         .then((response) => {
           console.log(response.data);
           alert("User updated.");
@@ -104,7 +116,6 @@ function UpdateUser(): JSX.Element {
           errorAlert(err);
         });
     };
-  
     return (
       <div className="NewUser">
         <h3>Update User</h3>
@@ -114,6 +125,7 @@ function UpdateUser(): JSX.Element {
           <Form.Control 
           {...register("id")}
           name="id" as="select" onChange={handleUser}>
+            <option key={-1} value={-1}>--choose one--</option>
             {users.map((user) => {
               return (
                 <option key={user.id} value={user.id}>
@@ -143,11 +155,8 @@ function UpdateUser(): JSX.Element {
                 as="textarea"
                 disabled={disableField !== "customer"}
                 {...register("address", {
-                  required: { value: true, message: "please enter address" },
-                  minLength: {
-                    value: 25,
-                    message: "please enter longer address",
-                  },
+                  required: { value: disableField === "customer", message: "please enter address" },
+                  minLength: {value: disableField === "customer"?20:0,message: "please enter longer address"},
                 })}
               />
               <span>{errors.address?.message}</span>
@@ -157,11 +166,8 @@ function UpdateUser(): JSX.Element {
               <Form.Control
                 disabled={disableField !== "customer"}
                 {...register("phone", {
-                  required: { value: true, message: "please enter phone" },
-                  minLength: {
-                    value: 9,
-                    message: "please enter longer phone number",
-                  },
+                  required: { value: disableField === "customer", message: "please enter phone" },
+                  minLength: {value: disableField === "customer"?9:0,message: "please enter longer phone number"},
                 })}
               />
               <span>{errors.phone?.message}</span>
@@ -182,15 +188,16 @@ function UpdateUser(): JSX.Element {
                 <option value={LevelEnum.SERVICE}>Service</option>
                 <option value={LevelEnum.ADMIN}>Admin</option>
               </Form.Control>
-              <span>{errors.phone?.message}</span>
+              <span>{errors.level?.message}</span>
             </Form.Group>
             <Form.Group>
               <Form.Label>Branch:</Form.Label>
               <Form.Control name="branchId" as="select"
                  disabled={disableField === "admin"}
                  {...register("branchId", {
-                  required: { value: true, message: "please enter branch" },
+                 required: { value: disableField !== "admin", message: "please enter branch" },
                 })}>
+                <option key={-1} value={-1}>--choose one--</option>
                 {branches.map((branch) => {
                   return (
                     <option key={branch.id} value={branch.id}>
@@ -224,9 +231,6 @@ function UpdateUser(): JSX.Element {
           </Form>
           <br />
         </div>
-        <NavLink to="adminMenu">
-          <Button type="button">RETURN TO MENU</Button>
-        </NavLink>
       </div>
     );
 }

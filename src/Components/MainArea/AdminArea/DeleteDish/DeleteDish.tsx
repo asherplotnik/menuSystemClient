@@ -1,22 +1,16 @@
-import axios from "axios";
 import { SyntheticEvent, useEffect, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
 import DishModel from "../../../../Models/DishModel";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
+import jwtAxios from "../../../../Services/jwtAxios";
 import "./DeleteDish.css";
 
 function DeleteDish(): JSX.Element {
   let [dishes, setDishes] = useState<DishModel[]>([]);
-  let [token, setToken] = useState(store.getState().AuthState.auth.token);
-  useEffect(() => {
-    setToken(store.getState().AuthState.auth.token);
-  }, []);
-
+  
   const getMenu = () => {
-    axios
+    jwtAxios
       .get(globals.urls.localUrl + "order/getMenu")
       .then((response) => {
         setDishes(response.data);
@@ -33,10 +27,8 @@ function DeleteDish(): JSX.Element {
     e.preventDefault();
     const formData = new FormData(document.querySelector("#deleteDishForm"));
     const dishId = formData.get("dish");
-    axios
-      .delete(globals.urls.localUrl + "admin/deleteDish/" + dishId, {
-        headers: { token: token },
-      })
+    jwtAxios
+      .delete(globals.urls.localUrl + "admin/deleteDish/" + dishId)
       .then((res) => {
         getMenu();
         alert(res.data);
@@ -64,9 +56,6 @@ function DeleteDish(): JSX.Element {
         <Button type="submit">DELETE</Button>
       </Form>
       <br />
-      <NavLink to="adminMenu">
-        <Button>RETURN TO MENU</Button>
-      </NavLink>
     </div>
   );
 }

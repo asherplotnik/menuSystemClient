@@ -1,16 +1,13 @@
-import axios from "axios";
 import { Button, Form } from "react-bootstrap";
 import { useForm } from "react-hook-form";
-import { NavLink } from "react-router-dom";
 import DishModel from "../../../../Models/DishModel";
 import { CategoryEnum } from "../../../../Models/Enums";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
+import jwtAxios from "../../../../Services/jwtAxios";
 import "./NewDish.css";
 
 function NewDish(): JSX.Element {
-  const token = store.getState().AuthState.auth.token;
   const {
     register,
     handleSubmit,
@@ -26,9 +23,9 @@ function NewDish(): JSX.Element {
     formData.append("available", data.available.toString());
     formData.append("image1", data.image1.item(0));
     formData.append("image2", data.image2.item(0));
-    axios
+    jwtAxios
       .post<DishModel>(globals.urls.localUrl + "admin/addDish", formData, {
-        headers: { token: token, "Content-Type": "multipart/form-data" },
+        headers: { "Content-Type": "multipart/form-data" },
       })
       .then((response) => {
         console.log(response.data);
@@ -123,9 +120,6 @@ function NewDish(): JSX.Element {
         </Form>
         <br />
       </div>
-      <NavLink to="adminMenu">
-        <Button type="button">RETURN TO MENU</Button>
-      </NavLink>
     </div>
   );
 }

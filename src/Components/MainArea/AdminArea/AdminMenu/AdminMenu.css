@@ -1,0 +1,36 @@
+.AdminMenu {
+  position: fixed;
+  width: 10%;
+  text-align: left;
+}
+
+.Admin .AdminMain{
+  width: 80%;
+  margin: auto;
+}
+.AdminMenu .HoveredItem {
+  box-shadow: 0px 1px 2px rgb(117, 112, 112);
+  z-index: 10;
+}
+
+.AdminMenu .NavLink {
+ display: block;
+ margin: 10px;
+ border: 1px solid transparent;
+}
+.AdminMenu .Sidebar {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  /* min-height: 86vh !important; */
+  z-index: 100;
+  padding:10px;
+  transform: translateX(0%);
+  transition: 0.6s;
+}
+
+.AdminMenu .ShowSide {
+  transform: translateX(-200%);
+  transition: 0.6s;
+}

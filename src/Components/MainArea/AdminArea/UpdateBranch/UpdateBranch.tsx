@@ -1,25 +1,20 @@
 import BranchModel from "../../../../Models/BranchModel";
 import "./UpdateBranch.css";
-import axios from "axios";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
-import { useCallback } from "react";
+import jwtAxios from "../../../../Services/jwtAxios";
 
 function UpdateBranch(): JSX.Element {
-  let [token , setToken] = useState(store.getState().AuthState.auth.token);
   let [branches, setBranches] = useState<BranchModel[]>([]);
   let [fetchedBranch, setFetchedBranch] = useState<BranchModel>(null);
   let formRef = useRef(null);
   const handleFetch = () => {
     const formData = new FormData(formRef.current);
     const dishId = formData.get("updateDishId");
-    axios
-      .get<BranchModel>(globals.urls.localUrl + "admin/getBranch/" + dishId, {
-        headers: { token: token}})
+    jwtAxios
+      .get<BranchModel>(globals.urls.localUrl + "admin/getBranch/" + dishId)
       .then((res) => {
         console.log(res.data);
         setFetchedBranch(res.data);
@@ -35,9 +30,8 @@ function UpdateBranch(): JSX.Element {
     newBranch.id = fetchedBranch.id;
     newBranch.name = formData.get("name") as string;
     newBranch.address = formData.get("address") as string;
-    axios
-      .put<BranchModel>(globals.urls.localUrl + "admin/updateBranch", newBranch, {
-        headers: { token: token}})
+    jwtAxios
+      .put<BranchModel>(globals.urls.localUrl + "admin/updateBranch", newBranch)
       .then((res) => {
         console.log("response " + res.data);
         getBranches();
@@ -48,26 +42,24 @@ function UpdateBranch(): JSX.Element {
       });
   };
 
-  const getBranches = useCallback(() => {
-    axios
-      .get(globals.urls.localUrl + "admin/getBranches", {
-        headers: { token: token}})
+  const getBranches = () => {
+    jwtAxios
+      .get(globals.urls.localUrl + "admin/getBranches")
       .then((response) => {
         setBranches(response.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  },[token]);
+  };
 
   useEffect(() => {
-    setToken(store.getState().AuthState.auth.token);
     getBranches();
-  }, [getBranches]);
+  }, []);
 
   return (
-    <div className="UpdateDish">
-      <h3>Update Dish</h3>
+    <div className="UpdateBranch">
+      <h3>Update Branch</h3>
       <div className="FormDish">
         <Form ref={formRef} onSubmit={onSubmit}>
           <Form.Group>
@@ -107,9 +99,6 @@ function UpdateBranch(): JSX.Element {
         </Form>
         <br />
       </div>
-      <NavLink to="adminMenu">
-        <Button type="button">RETURN TO MENU</Button>
-      </NavLink>
     </div>
   )
 }

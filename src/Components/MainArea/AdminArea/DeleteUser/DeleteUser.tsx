@@ -1,46 +1,34 @@
 import "./DeleteUser.css";
-import axios from "axios";
 import { SyntheticEvent, useEffect, useRef, useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { NavLink } from "react-router-dom";
-import store from "../../../../Redux/Store";
 import { errorAlert } from "../../../../Services/errorService";
 import globals from "../../../../Services/Globals";
-import { useCallback } from "react";
 import UserModel from "../../../../Models/UserModel";
+import jwtAxios from "../../../../Services/jwtAxios";
 function DeleteUser(): JSX.Element {
     let [users, setUsers] = useState<UserModel[]>([]);
-    let [token, setToken] = useState(store.getState().AuthState.auth.token);
     let formRef = useRef(null);
-    const getUsers = useCallback(() => {
-        axios
-          .get(globals.urls.localUrl + "admin/getUsers", {
-            headers: { token: token },
-          })
+    const getUsers = () => {
+      jwtAxios
+          .get(globals.urls.localUrl + "admin/getUsers")
           .then((response) => {
             setUsers(response.data);
           })
           .catch((err) => {
             console.log(err);
           });
-      },[token])
+      }
       
       useEffect(() => {
         getUsers();
-      },[getUsers]);
+      },[]);
       
-      useEffect(() => {
-        setToken(store.getState().AuthState.auth.token);
-      }, []);
-
       const handleDelete = (e: SyntheticEvent) => {
         e.preventDefault();
         const formData = new FormData(formRef.current);
         const userId = formData.get("user");
-        axios
-          .delete(globals.urls.localUrl + "admin/deleteUser/" + userId, {
-            headers: { token: token },
-          })
+        jwtAxios
+          .delete(globals.urls.localUrl + "admin/deleteUser/" + userId)
           .then((res) => {
             getUsers();
             alert(res.data);
@@ -69,9 +57,6 @@ function DeleteUser(): JSX.Element {
         <Button type="submit">DELETE</Button>
       </Form>
       <br />
-      <NavLink to="adminMenu">
-        <Button>RETURN TO MENU</Button>
-      </NavLink>	
         </div>
     );
 }

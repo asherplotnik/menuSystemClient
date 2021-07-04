@@ -2,7 +2,6 @@ import "./MakeOrder.css";
 import { useForm } from "react-hook-form";
 import { Button, Form, Tab, Table, Tabs } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import axios from "axios";
 import globals from "../../../Services/Globals";
 import DishModel from "../../../Models/DishModel";
 import DishCard from "../DishCard/DishCard";
@@ -12,13 +11,13 @@ import { OrderType } from "../../../Models/Enums";
 import store from "../../../Redux/Store";
 import { useHistory } from "react-router";
 import { errorAlert } from "../../../Services/errorService";
+import jwtAxios from "../../../Services/jwtAxios";
 
 function MakeOrder(): JSX.Element {
   let [dishes, setDishes] = useState<DishModel[]>([]);
   let [selectedDishes, setSelectedDishes] = useState<EntryPayload[]>([]);
   let [key, setKey] = useState("DRINK");
   let [up, setUp] = useState(0);
-  let [token, setToken] = useState("");
   const history = useHistory();
   const handleSelectedDish = (dish: DishModel) => {
     let temp = [...selectedDishes];
@@ -61,7 +60,7 @@ function MakeOrder(): JSX.Element {
     if (!store.getState().AuthState.auth.token) {
       history.push("/login");
     }
-    axios
+    jwtAxios
       .get(globals.urls.localUrl + "order/getMenu")
       .then((response) => {
         setDishes(response.data);
@@ -69,7 +68,6 @@ function MakeOrder(): JSX.Element {
       .catch((err) => {
         console.log(err);
       });
-    setToken(store.getState().AuthState.auth.token);
   }, [history]);
 
   const { register, handleSubmit } = useForm();
@@ -87,10 +85,8 @@ function MakeOrder(): JSX.Element {
     }
     order.note = data.note;
     order.entries = selectedDishes;
-    axios
-      .post<OrderPayload>(globals.urls.localUrl + "order/makeOrder", order, {
-        headers: { token: token },
-      })
+    jwtAxios
+      .post<OrderPayload>(globals.urls.localUrl + "order/makeOrder", order)
       .then(() => {
         setSelectedDishes([]);
         alert("Order Sent.");
@@ -117,7 +113,7 @@ function MakeOrder(): JSX.Element {
 
   return (
     <div className="MakeOrder">
-      <img className="BackImg" src = "https://i.ibb.co/0BRfdw5/salad2.jpg"/>
+      <img alt="salad" className="BackImg" src = "https://i.ibb.co/0BRfdw5/salad2.jpg"/>
       <Tabs
         id="controlled-tab-example"
         activeKey={key}
