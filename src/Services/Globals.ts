@@ -11,9 +11,7 @@ class DevelopmentGlobals extends Globals {
 // Global settings which are suitable only for production:
 class ProductionGlobals extends Globals {
     public urls = {
-        products: "https://ashercouponsystem.herokuapp.com/api/products/", // In real life there will be the production address
-        couponImages:"https://ashercouponsystem.herokuapp.com/images/",
-        localUrl : "https://ashercouponsystem.herokuapp.com/"
+        localUrl : "https://food-order-display.herokuapp.com/"
     };
 }
 
